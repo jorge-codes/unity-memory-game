@@ -4,6 +4,7 @@ using System.Collections;
 public class CardController : MonoBehaviour
 {
     public Renderer cardIconRenderer;
+    public AudioSource audioSource;
     private Sprite _sprite;
     private int _id;
     private GameManager _manager;
@@ -13,6 +14,9 @@ public class CardController : MonoBehaviour
     
     public void Setup(Sprite sprite, int cardId, GameManager gameManager)
     {
+        _isFlipped = false;
+        if (_collider == null) _collider = GetComponent<Collider>();
+        _collider.enabled = true;
         _sprite = sprite;
         _id = cardId;
         _manager = gameManager;
@@ -47,6 +51,7 @@ public class CardController : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+        
     }
 
     public void Disable()
@@ -54,17 +59,10 @@ public class CardController : MonoBehaviour
         _collider.enabled = false;
     }
 
-    public void ResetCard()
-    {
-        Flip(false);
-        _collider.enabled = true;
-    }
-
     
-    private void Start()
+    private void Awake()
     {
-        _isFlipped = false;
-        _collider = GetComponent<Collider>();
+        
     }
      
     private void OnMouseDown()

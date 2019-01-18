@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardIconRenderer: {fileID: 1708532566048063208}
+  audioSource: {fileID: 0}
 --- !u!1 &8419975810341970263
 GameObject:
   m_ObjectHideFlags: 0

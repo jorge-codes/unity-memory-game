@@ -1,9 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.U2D;
-using UnityEngine.EventSystems;
 
 
 public class GameManager : MonoBehaviour
@@ -18,6 +15,17 @@ public class GameManager : MonoBehaviour
     [Space(20)]
     public DealerController dealer;
 
+    [Space(20)]
+    [Header("Audio Settings")]
+    public AudioSource audioSource;
+    public AudioClip cardFlip;
+    public AudioClip wrongOption;
+    public AudioClip rightOption;
+    [Range(0.1f, 1f)] public float rightSoundDelay;
+    [Range(0.1f, 1f)] public float wrongSoundDelay;
+
+    
+
     private int cardsFlipped;
     private int[] deck;
     private CardController[] cards;
@@ -26,12 +34,9 @@ public class GameManager : MonoBehaviour
     private int cardA;
     private int cardB;
     private int cardsLeft;
-    private EventSystem _eventSystem;
 
     private void Start()
-    {
-        _eventSystem = EventSystem.current;
-        
+    {   
         int i;
         cardsFlipped = 0;
         int cardTypesNum = cardIcons.icons.Length;
@@ -52,7 +57,6 @@ public class GameManager : MonoBehaviour
             cards[i] = card;
         }
         dealer.PlaceCards(cards);
-        
         
         InitGame();   
     }
@@ -87,6 +91,8 @@ public class GameManager : MonoBehaviour
 
     public void FlipCard(int number)
     {
+        audioSource.clip = cardFlip;
+        audioSource.Play();
         cardsFlipped++;
         if (cardsFlipped == 1)
         {
@@ -97,6 +103,7 @@ public class GameManager : MonoBehaviour
         cardB = number;
         if (deck[cardA] == deck[cardB])
         {
+            StartCoroutine(PlayFeedbackSound(rightOption, rightSoundDelay));
             cards[cardA].Disable();
             cards[cardB].Disable();
             cardsLeft--;
@@ -111,6 +118,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            StartCoroutine(PlayFeedbackSound(wrongOption, wrongSoundDelay));
             StartCoroutine(FlipBack(cardA, cardB, flipDelayTime));
         }
         cardsFlipped = 0;
@@ -135,6 +143,13 @@ public class GameManager : MonoBehaviour
                 cardColliders[i].enabled = cardColliderStates[i];
             }
         }
+    }
+
+    private IEnumerator PlayFeedbackSound(AudioClip clip, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        audioSource.clip = clip;
+        audioSource.Play();
     }
 
     private void SaveColliderStates()

@@ -44,29 +44,32 @@ public class GameManager : MonoBehaviour
         for (i = 0; i < wholeDeckNum; i++)
         {
             deck[i] = i % cardTypesNum;
-        }
-
-        deck = Shuffle(deck);
-
-        for (i = 0; i < deck.Length; i++)
-        {
             GameObject cardObj = Instantiate(cardPrefab, deckParent);
             cardObj.name = "Card " + i;
             cardColliders[i] = cardObj.GetComponent<Collider>();
             cardColliderStates[i] = cardColliders[i].enabled;
             CardController card = cardObj.GetComponent<CardController>();
-            int cardType = deck[i];
-            card.Setup(cardIcons.icons[cardType], i, this);
             cards[i] = card;
         }
-        
         dealer.PlaceCards(cards);
+        
+        
+        InitGame();   
+    }
 
+    public void InitGame()
+    {
+        deck = Shuffle(deck);
+        for (int i = 0; i < deck.Length; i++)
+        {
+            CardController card = cards[i];
+            int cardType = deck[i];
+            card.Setup(cardIcons.icons[cardType], i, this);
+        }
         if (feedbackObj != null)
         {
             feedbackObj.SetActive(false);            
         }
-        
     }
 
     public int[] Shuffle(int[] deck)

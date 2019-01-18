@@ -17,15 +17,14 @@ public class CardController : MonoBehaviour
         _id = cardId;
         _manager = gameManager;
         cardIconRenderer.material.mainTexture = _sprite.texture;
+        transform.rotation = Quaternion.identity;
     }
     
     public void Flip(bool val)
     {
         _isFlipped = val;
-//        transform.rotation = Quaternion.identity;
         if (_isFlipped)
         {
-//            transform.Rotate(0f, 180f, 0f, Space.Self);
             _manager.FlipCard(_id); 
         }
 

@@ -51,7 +51,8 @@ public class CardController : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
-        
+
+        transform.rotation = target;
     }
 
     public void Disable()
